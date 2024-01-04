@@ -46,7 +46,7 @@
 
     * {
 
-        margin: 0;
+        margin: 30;
 
         padding: 0;
 
@@ -98,6 +98,7 @@
 
         margin: auto;
         /* Center the book horizontally */
+        margin-top: 5vh;
 
         position: relative;
         /* Relative positioning for button placement */
@@ -206,113 +207,25 @@
     }
 
 
+    #prevNextContainer {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Align the buttons vertically */
+    width: 100%;
+    position: absolute; /* Positioning relative to the nearest positioned ancestor */
+    top: 5%; /* Adjust this percentage to move buttons above the zoom control */
+    z-index: 1010; /* Higher than zoom control to ensure it's on top */
+}
 
-    /* Controller Buttons */
-
-
-
-    /* Additional CSS for top buttons */
-
-    button#prev-btn,
-    button#next-btn {
-
-        /* Basic styling */
-
-        position: absolute;
-        /* Position them absolutely relative to their nearest positioned ancestor */
-
-        top: 20px;
-        /* Distance from the top of the page */
-
-    }
-
-
-
-    .button-container {
-
-        display: flex;
-        /* Aligns children (buttons) in a row */
-
-        justify-content: center;
-        /* Centers the buttons horizontally */
-
-        align-items: center;
-        /* Aligns buttons vertically */
-
-        margin-top: 20px;
-        /* Adjust as needed for spacing from top */
-
-
-
-    }
-
-
-
-    /* Styles for buttons */
-
-    button {
-
-        border-radius: 5px;
-
-        font-size: 16px;
-
-        cursor: pointer;
-
-        transition: background-color 0.3s, transform 0.5s;
-
-        border: none;
-
-        background-color: transparent;
-
-
-
-    }
-
-    #prev-btn {
-
-        margin-right: 250px;
-        /* Increase space to the right of the previous button */
-        bottom: 500vw;
-        z-index: 900;
-
-    }
-
-
-
-    #next-btn {
-
-        margin-left: 1975px;
-        bottom: 500vw;
-        z-index: 900;
-
-
-    }
-
-
-
-    button:focus {
-
-        outline: none;
-
-    }
-
-
-
-    button:hover i {
-
-        color: #636363;
-
-    }
-
-
-
-    i {
-
-        font-size: 50px;
-
-        color: gray;
-
-    }
+.control-button {
+    margin: 0 1vw; /* Adjust space between buttons */
+    background-color: #ddd;
+    border: none;
+    padding: 2vh 4vw; /* Adjust padding for button size */
+    cursor: pointer;
+    font-size: 1.8vh; /* Adjust font size */
+    border-radius: 0.8vh; /* Rounded corners for aesthetics */
+}
 
 
 
@@ -343,18 +256,16 @@
     /* Style for the zoom control container */
 
     .zoom-control {
-        text-align: center;
-        background-color: #f4f4f4;
-        padding: 10px;
-        border-radius: 5px;
-        z-index: 1000;
-        position: absolute;
-        /* or 'fixed' depending on requirement */
-        top: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        /* Adjust the width as needed */
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    position: absolute;
+    top: 12%; /* Adjust this value as needed to position vertically */
+    left: 50%; /* Center horizontally relative to the book */
+    transform: translateX(-50%); /* Center the zoom control on the book */
+    width: 80%;
     }
 
 
@@ -474,30 +385,9 @@
 
 
 
-<!-- Previous Button -->
-
-<div class="button-container">
-
-    <!-- Previous Button -->
-
-    <button id="prev-btn">
-
-        <i class="fas fa-arrow-circle-left"></i>
-
-    </button>
-
-
-
-    <!-- Next Button -->
-
-    <button id="next-btn">
-
-        <i class="fas fa-arrow-circle-right"></i>
-
-    </button>
-
-
-
+<div id="prevNextContainer">
+    <button id="prev-btn" class="control-button">Previous</button>
+    <button id="next-btn" class="control-button">Next</button>
 </div>
 
 <div class="zoom-control">
@@ -776,9 +666,9 @@
 
         book.style.transform = "translateX(50%)";
 
-        prevBtn.style.transform = "translateX(-180px)";
+        prevBtn.style.transform = "translateX(0px)";
 
-        nextBtn.style.transform = "translateX(150px)";
+        nextBtn.style.transform = "translateX(0px)";
 
     }
 
@@ -786,7 +676,7 @@
 
     function closeBook(isAtBeginning) {
 
-        book.style.transform = isAtBeginning ? "translateX(0%)" : "translateX(50%)";
+        book.style.transform = isAtBeginning ? "translateX(0%)" : "translateX(0%)";
 
         prevBtn.style.transform = "translateX(0px)";
 
@@ -797,61 +687,44 @@
 
 
     function goNextPage() {
-
-        if (currentLocation < maxLocation) {
-
-            if (currentLocation === 1) {
-
-                openBook();
-
-            } else if (currentLocation === numOfPapers) {
-
-                closeBook(false);
-
-            }
-
-
-
-            papers[currentLocation - 1].classList.add("flipped");
-
-            papers[currentLocation - 1].style.zIndex = currentLocation;
-
-
-
-            currentLocation++;
-
+    if (currentLocation < maxLocation) {
+        // Open book for first page
+        if (currentLocation === 1) {
+            openBook();
         }
 
-    }
+        // Turn page
+        papers[currentLocation - 1].classList.add("flipped");
+        papers[currentLocation - 1].style.zIndex = currentLocation;
 
-
-
-    function goPrevPage() {
-
-        if (currentLocation > 1) {
-
-            currentLocation--;
-
-
-
-            if (currentLocation === 1) {
-
-                closeBook(true);
-
-            } else if (currentLocation === numOfPapers) {
-
-                openBook();
-
-            }
-
-
-
-            papers[currentLocation - 1].classList.remove("flipped");
-
-            papers[currentLocation - 1].style.zIndex = numOfPapers - currentLocation + 1;
-
+        // Close book for last page
+        if (currentLocation === numOfPapers) {
+            closeBook(false);
         }
 
+        currentLocation++;
     }
+}
+
+function goPrevPage() {
+    if (currentLocation > 1) {
+        currentLocation--;
+
+        // If moving back from the last page
+        if (currentLocation === numOfPapers) {
+            openBook();
+        }
+
+        // If moving back to the first page
+        if (currentLocation === 1) {
+            closeBook(true);
+        }
+
+        // Turn page back
+        papers[currentLocation - 1].classList.remove("flipped");
+        papers[currentLocation - 1].style.zIndex = numOfPapers - currentLocation + 1;
+    }
+}
+
 
 </script>
